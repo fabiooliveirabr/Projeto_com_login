@@ -1,0 +1,27 @@
+{
+  "name": "projeto-com-login",
+  "version": "1.0.0",
+  "main": "conexao.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabiooliveirabr/Projeto_com_login.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fabiooliveirabr/Projeto_com_login/issues"
+  },
+  "homepage": "https://github.com/fabiooliveirabr/Projeto_com_login#readme",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "mysql2": "^3.14.1",
+    "path": "^0.12.7"
+  }
+}
