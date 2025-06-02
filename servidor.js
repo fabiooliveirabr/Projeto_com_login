@@ -15,8 +15,34 @@ app.use(session({
   cookie: { maxAge: 15 * 60 * 1000 }
 }));
 
+function verificarAutenticado(req, res, next){
+  if(req.session.usuarioLogado){
+      next();
+  }else{
+      res.redirect('/login')
+  }
+}
+
+// Endpoint para deslogar
+app.get('/logout', (req, res)=>{
+  req.session.destroy();
+  res.redirect('/login');
+})
+
+// Endpoint para cadastrar novos usuários
+app.post('/cadastrarUsuario', (req, res)=>{
+    const {nomeCompleto, usuario, senha} = req.body;
+    db.query(`INSERT INTO tb_usuarios 
+              (nome, nome_usuario, senha_usuario) VALUES (?, ?, ?)`,
+            [nomeCompleto, usuario, senha], (erro, resultado)=>{
+                 if(erro){return res.json({msg:'Falha ao cadastrar'+erro.message})}
+                 return res.json({msg: "Cadastrado com sucesso"})
+            })
+})
+
+
 // Página principal
-app.get("/", (req, res)=>{
+app.get("/", verificarAutenticado, (req, res)=>{
   res.sendFile(path.join(__dirname, 'index.html'));
 })
 
@@ -25,10 +51,21 @@ app.get("/login", (req, res)=>{
   res.sendFile(path.join(__dirname, 'login.html'));
 })
 
+// Página de conta
+app.get("/conta", (req, res)=>{
+  res.sendFile(path.join(__dirname, 'conta.html'));
+})
+
+
 // Arquivo estilo.css
 app.get("/estilo", (req, res)=>{
   res.sendFile(path.join(__dirname, 'estilo.css'));
 })
+
+// Arquivo outra página em html
+app.get("/outra", verificarAutenticado, (req, res)=>{
+  res.sendFile(path.join(__dirname, 'outra.html'));
+});
 
 //Fazer login
 app.post("/fazerLogin", (req, res)=>{
@@ -37,6 +74,7 @@ app.post("/fazerLogin", (req, res)=>{
       [usuario, senha], (erro, resultado)=>{
         if(erro){return res.json({msg:"Falha ao consultar "+erro.message})}
         if(resultado.length == 1){
+          req.session.usuarioLogado = "Sim";
           return res.json({msg: true})
         }else{
           return res.json({msg: false})

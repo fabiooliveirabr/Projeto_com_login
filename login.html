@@ -14,8 +14,44 @@
                placeholder="Seu nome de usuário"> <br>
         <input type="password" id="caixa_senha"
                placeholder="Sua senha"> <br>
-        <button>Entrar</button> <br>
+        <button id="btn_entrar">Entrar</button> <br>
+        <center> <a href="/conta">Não tenho conta</a> </center>
         <span id="caixa_mensagem">Usuário e/ou Senha inválidos!</span>
-    </div>
+    </div>   
+       
+    <script>
+        $(document).ready(function(){
+              $("#caixa_mensagem").hide();  
+
+        });// Fim do documentReady
+
+        $("#btn_entrar").click(function(){
+                $("#caixa_mensagem").hide(); 
+                var usuario = $("#caixa_usuario").val();
+                var senha = $("#caixa_senha").val();
+                $.ajax({
+                    url: 'http://localhost:3000/fazerLogin',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    type: 'POST',
+                    data: JSON.stringify({usuario, senha}),
+                    success: function(resposta){
+                        if(resposta.msg == true){
+                            window.location.href = '/';
+                        }else if(resposta.msg == false){
+                             $("#caixa_mensagem").show();  
+                        }else{
+                            alert(resposta.msg)
+                        }
+                    },
+                    error: function(){
+                        alert("Falha ao acessar endpoint /fazerLogin")
+                    }
+                })
+
+        }); // Fim do btnEntrar
+
+    </script>
+
 </body>
 </html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+   <style>
+    input{
+        margin-bottom: 20px;
+    }
+    body{
+        text-align: center;
+        font-family: 'Lucida Sans';
+    }
+    </style>
+</head>
+<body>
+    <h1>Criar sua conta</h1>
+    <input type="text" id="caixa_nome" placeholder="Nome completo"> <br>
+    <input type="text" id="caixa_usuario" placeholder="NomeDeUsuario"> <br>
+    <input type="password" id="caixa_senha1" placeholder="Sua senha"><br>
+    <input type="password" id="caixa_senha2" placeholder="Confirme sua senha"><br>
+    <button id="btn_cadastrar">Cadastrar</button>
+
+    <script>
+        function senhasIguais(){
+            if($('#caixa_senha1').val() == $('#caixa_senha2').val()){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        $("#btn_cadastrar").click(function(){
+            if(senhasIguais() == false){
+                alert("As senhas devem ser iguais!")
+                return
+            }
+            var nomeCompleto = $("#caixa_nome").val();
+            var usuario = $("#caixa_usuario").val();
+            var senha = $('#caixa_senha1').val();
+
+            $.ajax({
+                url: 'http://localhost:3000/cadastrarUsuario',
+                dataType: 'json',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({nomeCompleto, usuario, senha}),
+                success: function(resposta){
+                    alert(resposta.msg);
+                    window.location.href = '/login'
+                },
+                error: function(){
+                    alert("Falha ao acessar o endpoint /cadastrarUsuario")
+                }
+            })
+
+
+        }) // Fim do click no btn_cadastrar
+
+
+
+    </script>
+</body>
+</html>
